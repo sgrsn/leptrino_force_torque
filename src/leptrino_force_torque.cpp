@@ -84,6 +84,7 @@ UCHAR CommRcvBuff[256];
 UCHAR CommSendBuff[1024];
 UCHAR SendBuff[512];
 double conversion_factor[FN_Num];
+double offset[FN_Num];
 
 std::string g_com_port;
 int g_rate;
@@ -111,6 +112,13 @@ int main(int argc, char** argv)
 
   std::string frame_id = "leptrino";
   nh_private.getParam("frame_id", frame_id);
+
+  nh_private.param<double>("offset_fx", offset[0], 0.0);
+  nh_private.param<double>("offset_fy", offset[1], 0.0);
+  nh_private.param<double>("offset_fz", offset[2], 0.0);
+  nh_private.param<double>("offset_tx", offset[3], 0.0);
+  nh_private.param<double>("offset_ty", offset[4], 0.0);
+  nh_private.param<double>("offset_tz", offset[5], 0.0);
 
   int i, l = 0, rt = 0;
   ST_RES_HEAD *stCmdHead;
@@ -222,12 +230,12 @@ int main(int argc, char** argv)
         geometry_msgs::WrenchStampedPtr msg(new geometry_msgs::WrenchStamped);
         msg->header.stamp = ros::Time::now();
         msg->header.frame_id = frame_id;
-        msg->wrench.force.x = stForce->ssForce[0] * conversion_factor[0];
-        msg->wrench.force.y = stForce->ssForce[1] * conversion_factor[1];
-        msg->wrench.force.z = stForce->ssForce[2] * conversion_factor[2];
-        msg->wrench.torque.x = stForce->ssForce[3] * conversion_factor[3];
-        msg->wrench.torque.y = stForce->ssForce[4] * conversion_factor[4];
-        msg->wrench.torque.z = stForce->ssForce[5] * conversion_factor[5];
+        msg->wrench.force.x = stForce->ssForce[0] * conversion_factor[0] - offset[0];
+        msg->wrench.force.y = stForce->ssForce[1] * conversion_factor[1] - offset[1];
+        msg->wrench.force.z = stForce->ssForce[2] * conversion_factor[2] - offset[2];
+        msg->wrench.torque.x = stForce->ssForce[3] * conversion_factor[3] - offset[3];
+        msg->wrench.torque.y = stForce->ssForce[4] * conversion_factor[4] - offset[4];
+        msg->wrench.torque.z = stForce->ssForce[5] * conversion_factor[5] - offset[5];
         force_torque_pub.publish(msg);
       }
     }

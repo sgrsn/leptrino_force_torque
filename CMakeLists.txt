@@ -4,7 +4,8 @@ project(leptrino_force_torque)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED COMPONENTS geometry_msgs roscpp)
+find_package(catkin REQUIRED COMPONENTS geometry_msgs roscpp roslib)
+find_package(yaml-cpp REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -50,7 +51,7 @@ find_package(catkin REQUIRED COMPONENTS geometry_msgs roscpp)
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ${PROJECT_NAME}
-#  CATKIN_DEPENDS geometry_msgs roscpp
+  CATKIN_DEPENDS roslib
 #  DEPENDS system_lib
 )
 
@@ -62,6 +63,7 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(include
   ${catkin_INCLUDE_DIRS}
+  ${YAML_CPP_INCLUDE_DIR}
 )
 
 ## Declare a cpp library
@@ -76,6 +78,7 @@ add_executable(${PROJECT_NAME}
   src/rs_comm.cpp
 )
 
+
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(leptrino_force_torque_node leptrino_force_torque_generate_messages_cpp)
@@ -84,6 +87,10 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
+
+
+add_executable(make_offset src/make_offset.cpp)
+target_link_libraries(make_offset ${catkin_LIBRARIES} ${YAML_CPP_LIBRARIES})
 
 #############
 ## Install ##
