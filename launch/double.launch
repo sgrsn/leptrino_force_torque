@@ -1,0 +1,18 @@
+<launch>
+  <group ns="/">
+    <rosparam command="load" file="$(find leptrino_force_torque)/config/offset1.yaml" ns="leptrino_force_torque" />
+    <arg name="comport" default="/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_COM_Port_1706042-if00" />
+    <node pkg="leptrino_force_torque" type="leptrino_force_torque" name="leptrino_force_torque" output="screen">
+      <param name="com_port" value="$(arg comport)" />
+    </node>
+  </group>
+
+  <group ns="leptrino2">
+  <rosparam command="load" file="$(find leptrino_force_torque)/config/offset2.yaml" ns="leptrino_force_torque" />
+  <arg name="comport" default="/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_COM_Port_2202039-if00" />
+  <node pkg="leptrino_force_torque" type="leptrino_force_torque" name="leptrino_force_torque" output="screen">
+  	<param name="com_port" value="$(arg comport)" />
+  </node>
+</group>
+</launch>  
+ 

@@ -1,0 +1,19 @@
+<launch>
+  <group ns="leptrino2">
+  <arg name="comport" default="/dev/serial/by-id/usb-STMicroelectronics_STM32_Virtual_COM_Port_2202039-if00" />
+  <node pkg="leptrino_force_torque" type="leptrino_force_torque" name="leptrino_force_torque" output="screen">
+  	<param name="com_port" value="$(arg comport)" />  	  
+    <remap from="~force_torque" to="force_torque" />	
+    <param name="offset_fx" value="0.0" />
+    <param name="offset_fy" value="0.0" />
+    <param name="offset_fz" value="0.0" />
+    <param name="offset_tx" value="0.0" />
+    <param name="offset_ty" value="0.0" />
+    <param name="offset_tz" value="0.0" />
+  </node>
+  <node pkg="leptrino_force_torque" type="make_offset" name="leptrino_make_offset" output="screen">
+    <param name="filename" value="offset2" />
+    <remap from="~force_torque" to="force_torque" />
+  </node>
+  </group>
+</launch>
